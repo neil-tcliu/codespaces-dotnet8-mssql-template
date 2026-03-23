@@ -17,8 +17,13 @@
 
   <ItemGroup>
     <Compile Remove="tests/**/*.cs" />
+    <Compile Remove="sqlserver-tests/**/*.cs" />
+    <Content Remove="tests/**/*" />
+    <Content Remove="sqlserver-tests/**/*" />
     <EmbeddedResource Remove="tests/**/*" />
-    <None Remove="tests/**/*.cs" />
+    <EmbeddedResource Remove="sqlserver-tests/**/*" />
+    <None Remove="tests/**/*" />
+    <None Remove="sqlserver-tests/**/*" />
   </ItemGroup>
 
   <ItemGroup>

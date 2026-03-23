@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1C105CAA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MssqlCrudBackend.Tests", "src\features\mssql\backend\tests\MssqlCrudBackend.Tests.csproj", "{1B008913-E437-159C-F539-8A193FF2528D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MssqlCrudBackend.SqlServer.Tests", "src\features\mssql\backend\sqlserver-tests\MssqlCrudBackend.SqlServer.Tests.csproj", "{1EE89154-06CB-4142-A534-9A420FDD8B6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{1B008913-E437-159C-F539-8A193FF2528D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B008913-E437-159C-F539-8A193FF2528D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B008913-E437-159C-F539-8A193FF2528D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EE89154-06CB-4142-A534-9A420FDD8B6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EE89154-06CB-4142-A534-9A420FDD8B6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EE89154-06CB-4142-A534-9A420FDD8B6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EE89154-06CB-4142-A534-9A420FDD8B6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{E2DC7807-2855-9D69-B539-33A18F79AFA4} = {17EE5128-B566-E0E3-ACA6-3659852CD432}
 		{1C105CAA-3B84-7B0E-0505-9045D35E938A} = {17EE5128-B566-E0E3-ACA6-3659852CD432}
 		{1B008913-E437-159C-F539-8A193FF2528D} = {1C105CAA-3B84-7B0E-0505-9045D35E938A}
+		{1EE89154-06CB-4142-A534-9A420FDD8B6D} = {17EE5128-B566-E0E3-ACA6-3659852CD432}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {308E9E3F-D55B-49EB-A56B-F8890828E93F}
