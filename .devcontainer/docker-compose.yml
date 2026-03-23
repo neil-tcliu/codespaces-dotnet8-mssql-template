@@ -1,0 +1,21 @@
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/base:ubuntu-24.04
+    command: sleep infinity
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-MSSQL_SA_PASSWORD_CHANGE_ME}
+    volumes:
+      - ..:/workspaces/codespaces-blank:cached
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_DATA_DIR: "/var/opt/mssql/data"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-MSSQL_SA_PASSWORD_CHANGE_ME}
+    volumes:
+      - ../src/features/mssql/.sqlserver/data:/var/opt/mssql/data
+      - ../src/features/mssql/.sqlserver/log:/var/opt/mssql/log
+      - ../src/features/mssql/.sqlserver/secrets:/var/opt/mssql/secrets

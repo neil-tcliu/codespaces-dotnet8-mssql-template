@@ -1,0 +1,62 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "prepare-web-app",
+      "type": "shell",
+      "command": "if command -v fuser >/dev/null 2>&1; then fuser -k 5000/tcp 2>/dev/null || true; fi && dotnet build src/features/mssql/backend/MssqlCrudBackend.csproj",
+      "group": "build",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "build-web-app",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "src/features/mssql/backend/MssqlCrudBackend.csproj"
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "run-web-app",
+      "type": "shell",
+      "command": "if command -v fuser >/dev/null 2>&1; then fuser -k 5000/tcp 2>/dev/null || true; fi && dotnet run --project src/features/mssql/backend/MssqlCrudBackend.csproj",
+      "options": {
+        "env": {
+          "ASPNETCORE_URLS": "http://0.0.0.0:5000"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "csharp",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*dotnet run.*|^$",
+          "endsPattern": "Now listening on:|Application started\\."
+        }
+      }
+    },
+    {
+      "label": "test-web-api",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "test",
+        "src/features/mssql/backend/tests/MssqlCrudBackend.Tests.csproj"
+      ],
+      "group": "test",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Web App",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "prepare-web-app",
+            "program": "${workspaceFolder}/src/features/mssql/backend/bin/Debug/net8.0/MssqlCrudBackend.dll",
+            "cwd": "${workspaceFolder}/src/features/mssql/backend",
+            "env": {
+                "ASPNETCORE_URLS": "http://0.0.0.0:5000"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open Web App",
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open Swagger Page",
+            "url": "http://localhost:5000/swagger",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

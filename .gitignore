@@ -1,0 +1,10 @@
+.data/
+.devcontainer/.env
+bin/
+obj/
+src/features/mssql/.sqlserver/data/*
+!src/features/mssql/.sqlserver/data/.gitkeep
+src/features/mssql/.sqlserver/log/*
+!src/features/mssql/.sqlserver/log/.gitkeep
+src/features/mssql/.sqlserver/secrets/*
+!src/features/mssql/.sqlserver/secrets/.gitkeep
