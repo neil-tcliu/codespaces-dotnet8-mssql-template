@@ -15,6 +15,19 @@ Use this flow if you want to get the feature running with the least amount of se
 5. Inside the container, run `dotnet run --project src/features/mssql/MssqlConsoleSample.csproj`
 6. Inside the container, run `dotnet run --project src/features/mssql/backend/MssqlCrudBackend.csproj`
 
+If you prefer VS Code tasks for the backend, this workspace also provides:
+
+- `prepare-web-app`
+- `build-web-app`
+- `run-web-app`
+- `test-web-api`
+
+Important:
+
+- Copying this repository into an existing Codespace or an already-running container does not automatically apply [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json).
+- If `dotnet --list-runtimes` does not show .NET 8, you are not in the intended workspace container yet.
+- If `getent hosts sqlserver` returns nothing, the SQL Server sidecar is not reachable from the current shell.
+
 The repository does not ship with a usable default SQL password. Publicly tracked files contain the placeholder `MSSQL_SA_PASSWORD_CHANGE_ME` on purpose.
 
 ## Feature Overview
@@ -121,11 +134,17 @@ Run it with:
 dotnet run --project src/features/mssql/backend/MssqlCrudBackend.csproj
 ```
 
+Or run the provided VS Code task:
+
+- `run-web-app`: starts the backend on `http://0.0.0.0:5000` and frees port `5000` first if needed
+
 Useful local URLs after startup:
 
 - `http://localhost:5000/`
 - `http://localhost:5000/swagger`
 - `http://localhost:5000/api/health`
+
+Check `http://localhost:5000/api/health` after startup to confirm whether the backend is using `sqlserver` or `in-memory`.
 
 ## Feature: Repository Modes
 
@@ -249,6 +268,17 @@ Web backend:
 dotnet build src/features/mssql/backend/MssqlCrudBackend.csproj
 dotnet run --project src/features/mssql/backend/MssqlCrudBackend.csproj
 ```
+
+VS Code tasks for the backend:
+
+```text
+prepare-web-app
+build-web-app
+run-web-app
+test-web-api
+```
+
+The `run-web-app` task binds the backend to `http://0.0.0.0:5000` and stops any process already using port `5000` before launching the app.
 
 Backend API tests:
 

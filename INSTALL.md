@@ -103,7 +103,44 @@ The volume mapping is:
 
 So the SQL Server engine runs inside a container, but the persisted files live under [src/features/mssql/.sqlserver](src/features/mssql/.sqlserver) in the repository tree rather than only inside the container filesystem.
 
+One practical consequence is that host-side directory permissions matter. If those folders are not writable by the SQL Server container user, the `sqlserver` container can repeatedly restart with startup errors before any application code runs.
+
+The directories to check are:
+
+- [src/features/mssql/.sqlserver/data](src/features/mssql/.sqlserver/data)
+- [src/features/mssql/.sqlserver/log](src/features/mssql/.sqlserver/log)
+- [src/features/mssql/.sqlserver/secrets](src/features/mssql/.sqlserver/secrets)
+
 ## Recommended Installation Sequence
+
+## Before You Trust the Current Shell
+
+This repository assumes the shell you use for `dotnet build`, `dotnet run`, and `dotnet test` is inside the workspace container created from [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json).
+
+That assumption is easy to break in two common cases:
+
+1. You copied this repository into an existing Codespace
+2. You opened the folder locally but did not run `Dev Containers: Rebuild and Reopen in Container`
+
+In both cases, the repository files are present, but the environment may still be the old one. That can lead to confusing results such as:
+
+- `dotnet build` succeeds while `dotnet test` fails to start `testhost`
+- You see .NET 9 or .NET 10 in the shell even though this repository targets .NET 8
+- The hostname `sqlserver` does not resolve
+
+Run these checks before doing anything else:
+
+```bash
+dotnet --list-runtimes
+getent hosts sqlserver
+```
+
+Expected result inside the intended workspace container:
+
+- `dotnet --list-runtimes` shows .NET 8 entries
+- `getent hosts sqlserver` returns an address
+
+If either check fails, stop and run `Dev Containers: Rebuild and Reopen in Container` before debugging the application code.
 
 ### 1. Open the Repository Root
 
@@ -130,6 +167,12 @@ After this step, you should expect at least the following:
 - The `sqlserver` sidecar container is started by Docker Compose
 - Both containers are attached to the same workspace network
 
+Important clarification:
+
+- Seeing [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json) in the repository does not mean it is already active.
+- The file only becomes effective after the folder is reopened in the Dev Container.
+- If you cloned or copied this repository into an already-running environment, the old environment remains active until you rebuild and reopen.
+
 If you just changed `MSSQL_SA_PASSWORD` in `.devcontainer/.env`, this rebuild step is also what applies the new value to the containers.
 
 ### 3. Verify .NET 8 SDK and Runtime
@@ -148,6 +191,8 @@ You should see .NET 8 entries. This matters because:
 
 If you only have the SDK but not the runtime, you can end up in a state where builds succeed but execution and tests fail.
 
+Do not treat a successful build under .NET 9 or .NET 10 as proof that the environment is correct. SDK roll-forward can hide the problem until test execution time.
+
 ### 4. Verify That `sqlserver` Resolves
 
 Inside the workspace container, run:
@@ -157,6 +202,8 @@ getent hosts sqlserver
 ```
 
 If this returns a result, the SQL Server sidecar is visible on the current workspace network. This is more reliable than guessing `localhost`, because the project connection strings do not target `localhost`. They target `sqlserver`.
+
+If this does not return a result, the usual cause is not a broken connection string. The usual cause is that your shell is not running in the workspace container created by Docker Compose for this repository.
 
 ### 5. Understand the Connection Strings and Database File Paths
 
@@ -256,6 +303,15 @@ Run:
 dotnet run --project src/features/mssql/backend/MssqlCrudBackend.csproj
 ```
 
+If you are running from VS Code instead of the terminal, this workspace already includes backend tasks in [.vscode/tasks.json](.vscode/tasks.json):
+
+- `prepare-web-app`
+- `build-web-app`
+- `run-web-app`
+- `test-web-api`
+
+The `run-web-app` task sets `ASPNETCORE_URLS=http://0.0.0.0:5000` and reuses port `5000` by stopping any process that is already bound to it.
+
 The backend startup path has one important behavior:
 
 - It tries to connect to SQL Server and initialize `MssqlCrudBackendDb`
@@ -267,6 +323,22 @@ That means the backend can run in two modes:
 - `in-memory`
 
 You can see the current mode from the `/api/health` response.
+
+When you use the provided task or bind the app manually to port `5000`, the quickest check is:
+
+```text
+http://localhost:5000/api/health
+```
+
+Expect a response shape like this:
+
+```json
+{
+  "status": "ok",
+  "environment": "Development",
+  "repository": "sqlserver"
+}
+```
 
 ### 11. Run the Backend API Tests
 
